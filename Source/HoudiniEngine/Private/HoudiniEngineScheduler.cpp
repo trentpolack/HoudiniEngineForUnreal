@@ -102,7 +102,7 @@ FHoudiniEngineScheduler::TaskInstantiateAsset(const FHoudiniEngineTask & Task)
 	FHoudiniEngineString(Task.AssetHapiName).ToFString(AssetN);
 
 	HOUDINI_LOG_MESSAGE(
-		TEXT("HAPI Asynchronous Instantiation Started for %s: Asset=%s, HoudiniAsset = 0x%x"),
+		TEXT("HAPI Asynchronous Instantiation Started for %s: Asset=%s, HoudiniAsset = %p"),
 		*Task.ActorName, *AssetN, Task.Asset.Get());
 
 	if (!FHoudiniEngineUtils::IsInitialized())

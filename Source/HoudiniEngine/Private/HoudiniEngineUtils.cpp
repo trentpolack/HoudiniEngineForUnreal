@@ -694,7 +694,7 @@ void FHoudiniEngineUtils::LogPackageInfo(const UPackage* InPackage)
 #else
 	HOUDINI_LOG_MESSAGE(TEXT(" = Package Id: %d"), InPackage->GetPackageId().ValueForDebugging());
 #endif
-	HOUDINI_LOG_MESSAGE(TEXT(" = File size: %d"), InPackage->GetFileSize());
+	HOUDINI_LOG_MESSAGE(TEXT(" = File size: %lld"), InPackage->GetFileSize());
 	HOUDINI_LOG_MESSAGE(TEXT(" = Contains map: %d"), InPackage->ContainsMap());
 	HOUDINI_LOG_MESSAGE(TEXT(" = Is Fully Loaded: %d"), InPackage->IsFullyLoaded());
 	HOUDINI_LOG_MESSAGE(TEXT(" = Is Dirty: %d"), InPackage->IsDirty());
@@ -6656,7 +6656,7 @@ FHoudiniEngineUtils::SetGenericPropertyAttribute(
 			break;
 		case EAttribOwner::Invalid:
 		default:
-			HOUDINI_LOG_WARNING(TEXT("Unsupported Attribute Owner: %d"), InPropertyAttribute.AttributeOwner);
+			HOUDINI_LOG_WARNING(TEXT("Unsupported Attribute Owner: %d"), static_cast<int32>(InPropertyAttribute.AttributeOwner));
 			return false;
 	}
 
@@ -6688,7 +6688,7 @@ FHoudiniEngineUtils::SetGenericPropertyAttribute(
 			break;
 		case (EAttribStorageType::Invalid):
 		default:
-			HOUDINI_LOG_WARNING(TEXT("Unsupported Attribute Storage Type: %d"), InPropertyAttribute.AttributeType);
+			HOUDINI_LOG_WARNING(TEXT("Unsupported Attribute Storage Type: %d"), static_cast<int32>(InPropertyAttribute.AttributeType));
 			return false;
 	}
 
@@ -6792,7 +6792,7 @@ FHoudiniEngineUtils::SetGenericPropertyAttribute(
 
 		default:
 			// Unsupported storage type
-			HOUDINI_LOG_WARNING(TEXT("Unsupported storage type: %d"), InPropertyAttribute.AttributeType);
+			HOUDINI_LOG_WARNING(TEXT("Unsupported storage type: %d"), static_cast<int32>(InPropertyAttribute.AttributeType));
 			break;
 	}
 
@@ -8522,8 +8522,8 @@ FString FHoudiniEngineUtils::RSTOrderToString(HAPI_RSTOrder RstOrder)
 
 FString FHoudiniEngineUtils::HapiTransformToString(HAPI_Transform Transform)
 {
-#if (ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION > 7)
-	TStringBuilderBase<TCHAR> Output;
+#if (ENGINE_MAJOR_VERSION > 5 || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 8))
+	TStringBuilder<256> Output;
 #else
 	FStringBuilderBase Output;
 #endif
@@ -8548,8 +8548,8 @@ FString FHoudiniEngineUtils::DumpNode(HAPI_NodeId NodeId)
 	if(Result != HAPI_RESULT_SUCCESS)
 		return FString::Printf(TEXT("Failed to get node info: %s\n"), *FHoudiniEngineUtils::GetErrorDescription());
 
-#if (ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION > 7)
-	TStringBuilderBase<TCHAR> Output;
+#if (ENGINE_MAJOR_VERSION > 5 || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 8))
+	TStringBuilder<2048> Output;
 #else
 	FStringBuilderBase Output;
 #endif
@@ -8567,7 +8567,7 @@ FString FHoudiniEngineUtils::DumpNode(HAPI_NodeId NodeId)
 		return Output.ToString();
 	}
 
-	Output.Append(TEXT("    Part Count: %d\n"), GeoInfo.partCount);
+	Output.Appendf(TEXT("    Part Count: %d\n"), GeoInfo.partCount);
 
 	for (int PartIndex = 0; PartIndex < GeoInfo.partCount; PartIndex++)
 	{
@@ -8588,8 +8588,8 @@ FString FHoudiniEngineUtils::DumpAttribute(HAPI_NodeId NodeId, HAPI_PartId PartI
 		return FString::Printf(TEXT("Failed to get attribute info: %s\n"), *FHoudiniEngineUtils::GetErrorDescription());
 	}
 
-#if (ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION > 7)
-	TStringBuilderBase<TCHAR> Output;
+#if (ENGINE_MAJOR_VERSION > 5 || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 8))
+	TStringBuilder<512> Output;
 #else
 	FStringBuilderBase Output;
 #endif

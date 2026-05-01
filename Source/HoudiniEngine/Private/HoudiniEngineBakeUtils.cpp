@@ -8452,7 +8452,7 @@ FHoudiniEngineBakeUtils::PDGAutoBakeAfterResultObjectLoaded(
 			break;
 
 		default:
-			HOUDINI_LOG_WARNING(TEXT("Unsupported HoudiniEngineBakeOption %i"), InPDGAssetLink->HoudiniEngineBakeOption);
+			HOUDINI_LOG_WARNING(TEXT("Unsupported HoudiniEngineBakeOption %i"), static_cast<int32>(InPDGAssetLink->HoudiniEngineBakeOption));
 	}
 
 	if (bSuccess)
