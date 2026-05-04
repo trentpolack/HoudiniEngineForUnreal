@@ -1340,7 +1340,7 @@ void FHoudiniOutputObject::DestroyCookedData(EHoudiniClearFlags ClearFlags)
 			{
 				TArray<UObject*> ObjectsToDelete;
 				ObjectsToDelete.Add(Package);
-				GetObjectsWithOuter(Package, ObjectsToDelete, true);
+				GetObjectsWithOuter(Package, ObjectsToDelete, EGetObjectsFlags::IncludeNestedObjects);
 
 				// Use ObjectTools to delete
 				ObjectTools::DeleteObjectsUnchecked(ObjectsToDelete);
